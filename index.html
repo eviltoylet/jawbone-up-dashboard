@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <!-- TODO: Remove the http scheme when development changes aren't tested off the file system -->
+        <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+        <script src="./src/data.js" charset="UTF-8"></script>
+        <title>Jawbone UP Dashboard</title>
+    </head>
+    <body>
+    <!--retrieve the CSVs through multi-file upload-->
+    <input type="file" id="files" name="files[]" multiple/>
+    <!--process all of those files and have the data in memory-->
+    <!--render it on screen via D3-->
+        <script>
+            document.getElementById("files").addEventListener("change", fileSelection, false);
+        </script>
+        <output id="steps">
+
+        </output>
+    </body>
+</html>
