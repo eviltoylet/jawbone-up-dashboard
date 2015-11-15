@@ -1,3 +1,5 @@
+"use strict";
+
 window.data = [];
 
 var parseDate = d3.time.format("%Y%m%d").parse;
@@ -36,30 +38,98 @@ var processFileContents = function (content) {
     }
 
     processCount++;
-    renderStepChart();
+    renderAllCharts();
 };
 
-var renderStepChart = function renderStepChart() {
+var renderAllCharts = function renderAllCharts() {
     if (processCount != fileCount) {
         return;
     }
+    renderStepChart();
+    renderStepHistogram();
+};
 
+var quantizeSteps = function quantizeSteps(stepCount) {
+    var bucketWidth = 1000;
+    var bucketNumber = Math.round(stepCount / bucketWidth);
+    return bucketNumber;
+};
+
+var renderStepHistogram = function renderStepHistogram() {
+    var formatCount = d3.format(",.0f");
     var margin = {top: 20, right: 20, bottom: 30, left: 50};
     var width = 960 - margin.left - margin.right;
     var height = 500 - margin.top - margin.bottom;
-    var y = d3.scale.linear()
-        .range([height, 0]);
+    var stepsArray = window.data.map(function (d) {
+        return d.steps;
+    });
+    var maxValue = Math.max(...stepsArray);
+    var bins = [];
 
-    var x = d3.time.scale()
-        .range([0, width]);
+    for (var i = 0; i < quantizeSteps(maxValue); i++) {
+        bins.push(i * 1000);
+    }
 
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom");
 
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left");
+    var data = d3.layout.histogram().bins(bins)(window.data.map(function (d) {
+        return d.steps
+    }));
+    var y = d3.scale.linear().domain([0, d3.max(data, function (d) {
+        return d.y
+    })]).range([height, 0]);
+    var x = d3.scale.linear().domain([0, maxValue]).range([0, width]);
+
+    var xAxis = d3.svg.axis().scale(x).orient("bottom");
+
+    d3.select("#stepHistogram .chart svg").remove();
+    var svg = d3.select("#stepHistogram .chart").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+    var bar = svg.selectAll(".bar")
+        .data(data)
+        .enter().append("g")
+        .attr("class", "bar")
+        .attr("transform", function (d) {
+            return "translate(" + x(d.x) + "," + y(d.y) + ")";
+        });
+
+    bar.append("rect")
+        .attr("x", 1)
+        .attr("width", x(data[0].dx) - 1)
+        .attr("height", function (d) {
+            return height - y(d.y);
+        });
+
+    bar.append("text")
+        .attr("dy", ".75em")
+        .attr("y", 6)
+        .attr("x", x(data[0].dx) / 2)
+        .attr("text-anchor", "middle")
+        .text(function (d) {
+            return formatCount(d.y);
+        });
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+};
+
+var renderStepChart = function renderStepChart() {
+    var margin = {top: 20, right: 20, bottom: 30, left: 50};
+    var width = 960 - margin.left - margin.right;
+    var height = 500 - margin.top - margin.bottom;
+    var y = d3.scale.linear().range([height, 0]);
+
+    var x = d3.time.scale().range([0, width]);
+
+    var xAxis = d3.svg.axis().scale(x).orient("bottom");
+
+    var yAxis = d3.svg.axis().scale(y).orient("left");
 
     var line = d3.svg.line()
         .x(function (d) {
@@ -105,7 +175,7 @@ var renderStepChart = function renderStepChart() {
         .datum(data)
         .attr("class", "line")
         .attr("d", line);
-}
+};
 
 window.fileSelection = function fileSelection(event) {
     window.data = [];

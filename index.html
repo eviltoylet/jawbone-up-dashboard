@@ -24,9 +24,23 @@
         .line {
             fill: none;
             stroke: steelblue;
-            stroke-width: 1.5px;
+            stroke-width: 1px;
         }
 
+        .bar rect {
+            fill: steelblue;
+            shape-rendering: crispEdges;
+        }
+
+        .bar text {
+            fill: #fff;
+        }
+
+        .axis path, .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
     </style>
 </head>
 <body>
@@ -40,6 +54,11 @@
 <div id="steps">
     <!-- TODO: Is there a way to get more granular data from Jawbone? -->
     <div class="description">Shows your daily step count over time</div>
+    <div class="chart"></div>
+</div>
+
+<div id="stepHistogram">
+    <div class="description">Shows a histogram of your step count</div>
     <div class="chart"></div>
 </div>
 
