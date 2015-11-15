@@ -1,20 +1,115 @@
 <html>
-    <head>
-        <!-- TODO: Remove the http scheme when development changes aren't tested off the file system -->
-        <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-        <script src="./src/data.js" charset="UTF-8"></script>
-        <title>Jawbone UP Dashboard</title>
-    </head>
-    <body>
-    <!--retrieve the CSVs through multi-file upload-->
-    <input type="file" id="files" name="files[]" multiple/>
-    <!--process all of those files and have the data in memory-->
-    <!--render it on screen via D3-->
-        <script>
-            document.getElementById("files").addEventListener("change", fileSelection, false);
-        </script>
-        <output id="steps">
+<head>
+    <!-- TODO: Remove the http scheme when development changes aren't tested off the file system -->
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="./src/data.js" charset="UTF-8"></script>
+    <title>Jawbone UP Dashboard</title>
+    <style>
 
-        </output>
-    </body>
+        body {
+            font: 10px sans-serif;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
+        .x.axis path {
+            display: none;
+        }
+
+        .line {
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 1.5px;
+        }
+
+    </style>
+</head>
+<body>
+<!--retrieve the CSVs through multi-file upload-->
+<input type="file" id="files" name="files[]" multiple/>
+<!--process all of those files and have the data in memory-->
+<!--render it on screen via D3-->
+<script>
+    document.getElementById("files").addEventListener("change", fileSelection, false);
+</script>
+<div id="steps">
+    <!-- TODO: Is there a way to get more granular data from Jawbone? -->
+    <div class="description">Shows your daily step count over time</div>
+    <button id="renderStepChart">render</button>
+    <div class="chart"></div>
+</div>
+<script>
+    // TODO: Remove the need to click the render button
+    var renderChart = function () {
+        var margin = {top: 20, right: 20, bottom: 30, left: 50};
+        var width = 960 - margin.left - margin.right;
+        var height = 500 - margin.top - margin.bottom;
+        var y = d3.scale.linear()
+                .range([height, 0]);
+
+        var x = d3.time.scale()
+                .range([0, width]);
+
+        var xAxis = d3.svg.axis()
+                .scale(x)
+                .orient("bottom");
+
+        var yAxis = d3.svg.axis()
+                .scale(y)
+                .orient("left");
+
+        var line = d3.svg.line()
+                .x(function (d) {
+                    return x(d.date);
+                })
+                .y(function (d) {
+                    return y(d.steps);
+                });
+
+        d3.select("#steps .chart svg").remove();
+
+        var svg = d3.select("#steps .chart").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var data = window.data;
+
+        x.domain(d3.extent(data, function (d) {
+            return d.date;
+        }));
+        y.domain(d3.extent(data, function (d) {
+            return d.steps;
+        }));
+
+        svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis);
+
+        svg.append("g")
+                .attr("class", "y axis")
+                .call(yAxis)
+                .append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 6)
+                .attr("dy", ".71em")
+                .style("text-anchor", "end")
+                .text("Steps");
+
+        svg.append("path")
+                .datum(data)
+                .attr("class", "line")
+                .attr("d", line);
+    };
+    document.getElementById("renderStepChart").addEventListener("click", renderChart, false);
+</script>
+
+</body>
 </html>
