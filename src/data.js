@@ -2,6 +2,12 @@
 
 window.data = [];
 
+var mapping = {
+    "m_steps": "Number of steps taken",
+    "m_active_time": "Time that was active",
+    "m_inactive_time": "Time that was inactive"
+}
+
 var parseDate = d3.time.format("%Y%m%d").parse;
 var processCount = 0;
 var fileCount = 0;
@@ -70,8 +76,11 @@ var renderStepHistogram = function renderStepHistogram() {
         bins.push(i * 1000);
     }
 
-
-    var data = d3.layout.histogram().bins(bins)(window.data.map(function (d) {
+    // filter out 0 steps?
+    var filteredData = window.data.filter(function (d) {
+        return d.steps != 0
+    });
+    var data = d3.layout.histogram().bins(bins)(filteredData.map(function (d) {
         return d.steps
     }));
     var y = d3.scale.linear().domain([0, d3.max(data, function (d) {
@@ -147,7 +156,9 @@ var renderStepChart = function renderStepChart() {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var data = window.data;
+    var data = window.data.filter(function (d) {
+        return d.steps != 0
+    });
 
     x.domain(d3.extent(data, function (d) {
         return d.date;
