@@ -1,0 +1,21 @@
+{
+  "name": "jawbone-up-dashboard",
+  "version": "0.0.1",
+  "description": "A dashboard for visualizing and analyzing Jawbone UP data.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eviltoylet/jawbone-up-dashboard.git"
+  },
+  "keywords": [
+    "jawbone",
+    "up",
+    "dashboard"
+  ],
+  "author": "Brian Chang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eviltoylet/jawbone-up-dashboard/issues"
+  },
+  "homepage": "https://github.com/eviltoylet/jawbone-up-dashboard#readme"
+}
