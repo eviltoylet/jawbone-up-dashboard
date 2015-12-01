@@ -2,7 +2,9 @@
   "name": "jawbone-up-dashboard",
   "version": "0.0.1",
   "description": "A dashboard for visualizing and analyzing Jawbone UP data.",
-  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --display-error-details"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eviltoylet/jawbone-up-dashboard.git"
@@ -17,5 +19,15 @@
   "bugs": {
     "url": "https://github.com/eviltoylet/jawbone-up-dashboard/issues"
   },
-  "homepage": "https://github.com/eviltoylet/jawbone-up-dashboard#readme"
+  "homepage": "https://github.com/eviltoylet/jawbone-up-dashboard#readme",
+  "dependencies": {
+    "react": "^0.14.3",
+    "react-calendar-widget": "0.0.2",
+    "react-dom": "^0.14.3"
+  },
+  "devDependencies": {
+    "jsx-loader": "^0.13.2",
+    "webpack": "^1.12.9",
+    "webpack-dev-server": "^1.14.0"
+  }
 }

@@ -1,3 +1,6 @@
+# Exclude Node.js files
+node_modules
+
 # Exclude IntelliJ IDEA files
 .idea
 *.iml

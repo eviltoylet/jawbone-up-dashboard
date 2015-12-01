@@ -44,6 +44,8 @@
     </style>
 </head>
 <body>
+<div id="calendar">
+</div>
 <!--retrieve the CSVs through multi-file upload-->
 <input type="file" id="files" name="files[]" multiple/>
 <!--process all of those files and have the data in memory-->
@@ -66,6 +68,8 @@
     <div class="description">Shows a stacked bar char of active time (not working)</div>
     <div class="chart"></div>
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
+<script src="./bundle.js"></script>
 </body>
 </html>
